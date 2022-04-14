@@ -38,8 +38,8 @@ def multi_ssp(
     def _normalize_result(length: int, vertices, distances) -> List[int]:
         result = length * [-1]
 
-        for i, vertex in enumerate(vertices):
-            result[vertex] = distances[i]
+        for n, vertex in enumerate(vertices):
+            result[vertex] = distances[n]
 
         return result
 
