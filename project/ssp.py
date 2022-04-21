@@ -20,30 +20,30 @@ def multi_ssp(
             f"start_vertices[i] must be between 0 and {adj_matrix.nrows - 1}"
         )
 
-    front = pgb.Matrix.sparse(
+    result = pgb.Matrix.sparse(
         typ=adj_matrix.type, nrows=len(start_vertices), ncols=adj_matrix.ncols
     )
 
     for i, j in enumerate(start_vertices):
-        front.assign_scalar(value=0, row_slice=i, col_slice=j)
+        result.assign_scalar(value=0, row_slice=i, col_slice=j)
 
     for _ in range(adj_matrix.nrows):
-        front.mxm(
+        result.mxm(
             other=adj_matrix,
             semiring=adj_matrix.type.min_plus,
-            out=front,
+            out=result,
             accum=adj_matrix.type.min,
         )
 
     def _normalize_result(length: int, vertices, distances) -> List[int]:
-        result = length * [-1]
+        normalized_result = length * [-1]
 
         for n, vertex in enumerate(vertices):
-            result[vertex] = distances[n]
+            normalized_result[vertex] = distances[n]
 
-        return result
+        return normalized_result
 
     return [
-        (vertex, _normalize_result(adj_matrix.nrows, *front[i].to_lists()))
+        (vertex, _normalize_result(adj_matrix.nrows, *result[i].to_lists()))
         for i, vertex in enumerate(start_vertices)
     ]
