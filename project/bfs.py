@@ -1,4 +1,4 @@
-from typing import List, Set, Tuple
+from typing import List, Tuple
 
 import pygraphblas as pgb
 
@@ -6,11 +6,11 @@ __all__ = ["single_bfs", "multi_bfs"]
 
 
 def single_bfs(adj_matrix: pgb.Matrix, start_vertex: int) -> List[int]:
-    return multi_bfs(adj_matrix, {start_vertex})[0][1]
+    return multi_bfs(adj_matrix, [start_vertex])[0][1]
 
 
 def multi_bfs(
-    adj_matrix: pgb.Matrix, start_vertices: Set[int]
+    adj_matrix: pgb.Matrix, start_vertices: List[int]
 ) -> List[Tuple[int, List[int]]]:
     if not adj_matrix.square:
         raise ValueError("adj_matrix must be square")
