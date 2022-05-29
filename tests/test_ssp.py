@@ -15,14 +15,14 @@ def test_incorrect_start_vertices():
     adj_matrix = pgb.Matrix.dense(pgb.INT64, nrows=2, ncols=2)
 
     with pytest.raises(ValueError):
-        multi_ssp(adj_matrix, {-2})
+        multi_ssp(adj_matrix, [-2])
 
 
 def test_not_square():
     adj_matrix = pgb.Matrix.dense(pgb.INT64, nrows=1, ncols=2)
 
     with pytest.raises(ValueError):
-        multi_ssp(adj_matrix, {0})
+        multi_ssp(adj_matrix, [0])
 
 
 @pytest.mark.parametrize(
@@ -61,7 +61,7 @@ def test_single_ssp(dim, i, j, v, start_vertex, expected):
             [0, 0, 1, 1, 2, 2],
             [0, 2, 0, 2, 1, 2],
             [0.0, 5.0, 1.0, 3000.0, 0.0, 3871.0],
-            {0, 2},
+            [0, 2],
             [(0, [0.0, 5.0, 5.0]), (2, [1.0, 0.0, 0.0])],
         ),
         (
@@ -69,7 +69,7 @@ def test_single_ssp(dim, i, j, v, start_vertex, expected):
             [0],
             [1],
             [59],
-            {1, 2},
+            [1, 2],
             [(1, [-1, 0, -1, -1, -1]), (2, [-1, -1, 0, -1, -1])],
         ),
         (
@@ -77,7 +77,7 @@ def test_single_ssp(dim, i, j, v, start_vertex, expected):
             [0, 0, 0, 1, 1, 1, 2, 2, 2],
             [0, 1, 2, 0, 1, 2, 0, 1, 2],
             [0, 3, 1, 8, 5, 1, 1, 1, 1],
-            {0, 1, 2},
+            [0, 1, 2],
             [(0, [0, 2, 1, -1]), (1, [2, 0, 1, -1]), (2, [1, 1, 0, -1])],
         ),
     ],
