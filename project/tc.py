@@ -14,19 +14,15 @@ def triangles_counting(adj_matrix: pgb.Matrix) -> List[int]:
 
     result = adj_matrix
 
-    for _ in range(2):
-        result = adj_matrix.mxm(
-            other=result, cast=pgb.types.INT64, accum=pgb.types.INT64.PLUS
-        )
+    result = result.union(other=result.transpose())
+    result = result.mxm(other=result, cast=pgb.types.INT64, mask=result)
 
-    result = result.diag().reduce_vector() / 2
-
-    def _normalize_result(length: int, vertices, triangles) -> List[int]:
+    def _normalize_result(length: int, res: pgb.Matrix) -> List[int]:
         normalized_result = length * [0]
 
-        for n, vertex in enumerate(vertices):
-            normalized_result[vertex] = triangles[n]
+        for n in range(length):
+            normalized_result[n] = res[n].reduce_int() // 2
 
         return normalized_result
 
-    return _normalize_result(adj_matrix.nrows, *result.to_lists())
+    return _normalize_result(adj_matrix.nrows, result)
