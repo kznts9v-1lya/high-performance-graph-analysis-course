@@ -14,7 +14,9 @@ def triangles_counting(adj_matrix: pgb.Matrix) -> List[int]:
 
     result = adj_matrix
 
+    # Make graph undirected
     result = result.union(other=result.transpose())
+    # Count paths of length 2 and close them with edges of the original graph
     result = result.mxm(other=result, cast=pgb.types.INT64, mask=result)
 
     def _normalize_result(length: int, res: pgb.Matrix) -> List[int]:
