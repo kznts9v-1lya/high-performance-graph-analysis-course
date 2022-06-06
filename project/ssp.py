@@ -27,13 +27,18 @@ def multi_ssp(
     for i, j in enumerate(start_vertices):
         front.assign_scalar(value=0, row_slice=i, col_slice=j)
 
-    for _ in range(adj_matrix.nrows):
+    changing = True
+    while changing:
+        prev_front_nnz = front.nonzero()
+
         front.mxm(
             other=adj_matrix,
             semiring=adj_matrix.type.min_plus,
             out=front,
             accum=adj_matrix.type.min,
         )
+
+        changing = not prev_front_nnz.iseq(front.nonzero())
 
     def _normalize_result(length: int, vertices, distances) -> List[int]:
         result = length * [-1]
